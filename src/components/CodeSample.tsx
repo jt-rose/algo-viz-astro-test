@@ -57,10 +57,12 @@ const languageParsers = {
   csharp,
 };
 
-Object.entries(languageParsers).map(([title, parser]) =>
-  SyntaxHighlighter.registerLanguage(title, parser)
+// NOTE: to satisfy the astro compiler, cjs imports need to be used over esm
+// which also requires the default export be explicitly specified
+// with 'parser.default'
+Object.entries(languageParsers).forEach(([title, parser]) =>
+  SyntaxHighlighter.registerLanguage(title, parser.default)
 );
-
 /* -------------------------------------------------------------------------- */
 /*                            CODE SAMPLE COMPONENT                           */
 /* -------------------------------------------------------------------------- */
