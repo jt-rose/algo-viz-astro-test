@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 
@@ -87,6 +87,10 @@ interface Props {
 }
 
 const CodeSample = (props: Props) => {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    setLoaded(true);
+  });
   const { code, language } = props.sample;
   const styles = Object.entries(themes);
   const [theme, setTheme] = useState(0);
@@ -99,6 +103,9 @@ const CodeSample = (props: Props) => {
       setTheme(theme + 1);
     }
   };
+  if (!loaded) {
+    return <p>...loading...</p>;
+  }
   return (
     <div>
       <input
