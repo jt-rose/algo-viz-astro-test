@@ -57,11 +57,19 @@ const languageParsers = {
   csharp,
 };
 
-// NOTE: to satisfy the astro compiler, cjs imports need to be used over esm
-// which also requires the default export be explicitly specified
-// with 'parser.default'
+// NOTE: encountered issue during build phase where
+// cjs import paths were inconsistent between SSG build
+// and client download, solved by the 'formatParser' function
+
+const formatParser = (parser: any) => {
+  if (typeof parser === "function") return parser;
+  if (typeof parser.default === "function") return parser.default;
+
+  throw Error("No valid parser function found from grammar import");
+};
+
 Object.entries(languageParsers).forEach(([title, parser]) =>
-  SyntaxHighlighter.registerLanguage(title, parser.default)
+  SyntaxHighlighter.registerLanguage(title, formatParser(parser))
 );
 /* -------------------------------------------------------------------------- */
 /*                            CODE SAMPLE COMPONENT                           */
